@@ -1,24 +1,24 @@
-resource "google_container_cluster" "preview_deploys" {
-  project = var.project_id
-  name = var.cluster_name
+resource "google_container_cluster" "preview_deploys_app" {
+  project  = var.project_id
+  name     = var.cluster_name
   location = var.location
 
   remove_default_node_pool = true
-  initial_node_count = var.initial_node_count
+  initial_node_count       = var.initial_node_count
 
-  network = var.network
+  network    = var.network
   subnetwork = var.subnet_name
 
   ip_allocation_policy {
-      cluster_ipv4_cidr_block = var.ip_range_pods
-      services_ipv4_cidr_block = var.ip_range_services
+    cluster_ipv4_cidr_block  = var.ip_range_pods
+    services_ipv4_cidr_block = var.ip_range_services
   }
 
-  logging_service = "logging.googleapis.com/kubernetes"
+  logging_service    = "logging.googleapis.com/kubernetes"
   monitoring_service = "monitoring.googleapis.com/kubernetes"
   maintenance_policy {
     daily_maintenance_window {
-        start_time = "03:00"
+      start_time = "03:00"
     }
   }
 
@@ -35,7 +35,7 @@ resource "google_container_cluster" "preview_deploys" {
     for_each = var.authorized_ipv4_cidr_block != null ? [var.authorized_ipv4_cidr_block] : []
     content {
       cidr_blocks {
-        cidr_block = master_authorized_networks_config.value
+        cidr_block   = master_authorized_networks_config.value
         display_name = "External Control Plane access"
       }
     }
@@ -43,8 +43,8 @@ resource "google_container_cluster" "preview_deploys" {
 
   private_cluster_config {
     enable_private_endpoint = true
-    enable_private_nodes = true
-    master_ipv4_cidr_block = var.master_ipv4_cidr_block
+    enable_private_nodes    = true
+    master_ipv4_cidr_block  = var.master_ipv4_cidr_block
   }
 
   release_channel {
@@ -53,7 +53,7 @@ resource "google_container_cluster" "preview_deploys" {
 
   addons_config {
     network_policy_config {
-        disabled = false
+      disabled = false
     }
     horizontal_pod_autoscaling {
       disabled = false
@@ -70,10 +70,10 @@ resource "google_container_cluster" "preview_deploys" {
 }
 
 
-resource "google_container_node_pool" "preview_deploys" {
-  name = var.node_pool_name
-  location = google_container_cluster.preview_deploys.location
-  cluster = google_container_cluster.preview_deploys.name
+resource "google_container_node_pool" "preview_deploys_app" {
+  name               = var.node_pool_name
+  location           = google_container_cluster.preview_deploys_app.location
+  cluster            = google_container_cluster.preview_deploys_app.name
   initial_node_count = 2
 
   autoscaling {
@@ -82,36 +82,40 @@ resource "google_container_node_pool" "preview_deploys" {
   }
 
   management {
-    auto_repair = var.auto_repair
-    auto_upgrade =var.auto_upgrade
+    auto_repair  = var.auto_repair
+    auto_upgrade = var.auto_upgrade
   }
 
   node_config {
-    preemptible = false
-    machine_type = var.machine_type
+    preemptible     = false
+    machine_type    = var.machine_type
     service_account = ""
 
     metadata = {
-        google-compute-enable-virtio-rng = true
-        disable-legacy-endpoint = true
+      google-compute-enable-virtio-rng = true
+      disable-legacy-endpoint          = true
     }
 
     oauth_scopes = var.oauth_scopes
 
     shielded_instance_config {
-        enable_secure_boot = true
+      enable_secure_boot = true
     }
 
     labels = {
-        cluster = google_container_cluster.preview_deploys.name
+      cluster = google_container_cluster.preview_deploys_app.name
     }
 
     tags = var.tags
   }
 
-  
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes  = [node_config]
+  }
+
 
   depends_on = [
-    google_container_cluster.preview_deploys
+    google_container_cluster.preview_deploys_app
   ]
 }

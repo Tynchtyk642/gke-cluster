@@ -1,22 +1,32 @@
-terraform {
-  # backend "gcs" {
-  #   bucket = ""
-  #   prefix = ""
-  # }
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "3.53.0"
-    }
-  }
-}
+# Terraform GCP GKE-clusters with Bastion Host
+
+## This codes create:
+
+1. ### Two private gke-clusters with `node_pool`:
+    - _Application cluster_
+    - _Database cluster_
+2. ### Bastion Host with Identity aware proxy (IAP) for a secure access.
+
+## **Diagram**
+![](diagram/gke.png)
+
+## **Usage**
+Then perform the following commands on the root folder:
+- `terraform init` terraform initialization
+- `terraform plan` to see the infrastructure plan
+- `terraform apply` to apply infrastructure build
+- `terraform output` to see the outputs
+- `terraform destroy` to destroy the build infrastructure
+
+``terraform
+provider "google"
 
 provider "google" {
-  credentials = file(var.credentials_file_path)
-
   project = var.project_id
   region  = var.region
-  zone    = var.main_zone
+  zone    = var.zone
+
+  credentials = file(var.credentials_file)
 }
 
 module "google_kubernetes_cluster_app" {
@@ -55,3 +65,5 @@ module "bastion" {
   vpc_name     = "vpc"
   subnet_name  = "presentation-subnet"
 }
+
+```
