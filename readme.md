@@ -19,8 +19,6 @@ Then perform the following commands on the root folder:
 - `terraform destroy` to destroy the build infrastructure
 
 ```terraform
-provider "google"
-
 provider "google" {
   project = var.project_id
   region  = var.region
