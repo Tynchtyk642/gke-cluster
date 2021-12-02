@@ -18,7 +18,7 @@ Then perform the following commands on the root folder:
 - `terraform output` to see the outputs
 - `terraform destroy` to destroy the build infrastructure
 
-``terraform
+```terraform
 provider "google"
 
 provider "google" {
