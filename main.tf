@@ -22,7 +22,7 @@ provider "google" {
 module "google_kubernetes_cluster_app" {
   source = "./gke_application"
 
-  gke_version                = "1.20"
+  gke_version                = var.gke_version
   location                   = "us-central1-a"
   network                    = "vpc"
   subnet_name                = "application-subnet"
@@ -36,7 +36,7 @@ module "google_kubernetes_cluster_app" {
 module "google_kubernetes_cluster_db" {
   source = "./gke_database"
 
-  gke_version                = "1.20"
+  gke_version                = var.gke_version
   location                   = "us-central1-a"
   network                    = "vpc"
   subnet_name                = "database-subnet"

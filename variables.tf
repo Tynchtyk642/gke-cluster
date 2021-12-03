@@ -16,3 +16,7 @@ variable "main_zone" {
   description = "Zone where by default your resource will be created."
   type        = string
 }
+
+variable "gke_version" {
+  type = string
+}
