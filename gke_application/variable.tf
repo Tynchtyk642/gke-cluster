@@ -49,6 +49,10 @@ variable "node_pool_name" {
   default = "preview-deploys-app"
 }
 
+variable "gke_version" {
+  type = string
+}
+
 variable "min_node_count" {
   type    = number
   default = 3

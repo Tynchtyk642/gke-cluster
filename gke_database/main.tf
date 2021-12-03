@@ -5,6 +5,7 @@ resource "google_container_cluster" "preview_deploys_db" {
 
   remove_default_node_pool = true
   initial_node_count       = var.initial_node_count
+  min_master_version = var.gke_version
 
   network    = var.network
   subnetwork = var.subnet_name
@@ -75,6 +76,7 @@ resource "google_container_node_pool" "preview_deploys_db" {
   location           = google_container_cluster.preview_deploys_db.location
   cluster            = google_container_cluster.preview_deploys_db.name
   initial_node_count = 2
+
 
   autoscaling {
     min_node_count = var.min_node_count
