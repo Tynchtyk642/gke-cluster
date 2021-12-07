@@ -6,6 +6,7 @@ resource "google_sql_database_instance" "master" {
   name             = "sql-master-${random_id.id.hex}"
   region           = "us-east1"
   database_version = "POSTGRES_13"
+  deletion_protection = true
 
   depends_on = [google_service_networking_connection.private_vpc_connection]
 
@@ -32,6 +33,7 @@ resource "google_sql_database_instance" "master" {
 #   region               = "us-east1"
 #   database_version     = "POSTGRES_13"
 #   master_instance_name = google_sql_database_instance.master.name
+#   deletion_protection = false
 
 #   settings {
 #     tier            = var.sql_instance_size
