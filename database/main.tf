@@ -23,24 +23,24 @@ resource "google_sql_database_instance" "master" {
   }
 }
 
-resource "google_sql_database_instance" "replica" {
-  depends_on = [
-    google_sql_database_instance.master,
-  ]
+# resource "google_sql_database_instance" "replica" {
+#   depends_on = [
+#     google_sql_database_instance.master,
+#   ]
 
-  name                 = "master-replica"
-  region               = "us-east1"
-  database_version     = "POSTGRES_13"
-  master_instance_name = google_sql_database_instance.master.name
+#   name                 = "master-replica"
+#   region               = "us-east1"
+#   database_version     = "POSTGRES_13"
+#   master_instance_name = google_sql_database_instance.master.name
 
-  settings {
-    tier            = var.sql_instance_size
-    disk_type       = var.sql_disk_type
-    disk_size       = var.sql_disk_size
-    disk_autoresize = true
+#   settings {
+#     tier            = var.sql_instance_size
+#     disk_type       = var.sql_disk_type
+#     disk_size       = var.sql_disk_size
+#     disk_autoresize = true
 
-  }
-}
+#   }
+# }
 
 resource "google_sql_database" "database" {
     name = "sql"
@@ -50,7 +50,7 @@ resource "google_sql_database" "database" {
 resource "google_sql_user" "user" {
   depends_on = [
     google_sql_database_instance.master,
-    google_sql_database_instance.replica,
+    # google_sql_database_instance.replica,
   ]
 
   instance = google_sql_database_instance.master.name
