@@ -7,10 +7,6 @@ output "app_configure_kubectl_command_for_cluster" {
   value = "gcloud container clusters get-credentials ${module.google_kubernetes_cluster_app.name} --zone ${module.google_kubernetes_cluster_app.zone} --project ${module.google_kubernetes_cluster_app.project_id}"
 }
 
-output "db_configure_kubectl_command_for_cluster" {
-  value = "gcloud container clusters get-credentials ${module.google_kubernetes_cluster_db.name} --zone ${module.google_kubernetes_cluster_db.zone} --project ${module.google_kubernetes_cluster_db.project_id}"
-}
-
 
 output "kubectl_alias_command" {
   description = "Command that creates an alias for kubectl using Bastion as proxy. Bastion ssh tunnel must be running."

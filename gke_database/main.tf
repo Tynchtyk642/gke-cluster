@@ -49,7 +49,7 @@ resource "google_container_cluster" "preview_deploys_db" {
   }
 
   release_channel {
-    channel = "STABLE"
+    channel = "UNSPECIFIED"
   }
 
   addons_config {

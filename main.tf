@@ -11,6 +11,11 @@ terraform {
   }
 }
 
+provider "google-beta" {
+  credentials = file(var.credentials_file_path)
+  project = var.project_id
+}
+
 provider "google" {
   credentials = file(var.credentials_file_path)
 
@@ -33,20 +38,6 @@ module "google_kubernetes_cluster_app" {
   tags                       = ["application"]
 }
 
-module "google_kubernetes_cluster_db" {
-  source = "./gke_database"
-
-  gke_version                = var.gke_version
-  location                   = "us-central1-a"
-  network                    = "vpc"
-  subnet_name                = "database-subnet"
-  ip_range_pods              = local.cluster_pods_ip_cidr_range_db
-  ip_range_services          = local.cluster_services_ip_cidr_range_db
-  master_ipv4_cidr_block     = local.cluster_master_ip_cidr_range_db
-  authorized_ipv4_cidr_block = "${module.bastion.ip}/32"
-  tags                       = ["database"]
-}
-
 module "bastion" {
   source = "./bastion"
 
@@ -56,4 +47,18 @@ module "bastion" {
   bastion_name = "app-cluster"
   vpc_name     = "vpc"
   subnet_name  = "presentation-subnet"
+}
+
+module "database" {
+  source = "./database"
+
+  sql_instance_size = "db-f1-micro"
+  sql_disk_type = "PD_SSD"
+  sql_disk_size = 10
+  sql_require_ssl = false
+  sql_connect_retry_interval = 60
+  sql_user = "admin"
+  sql_pass = "password"
+
+  vpc_id = "" # <<== VPC ID
 }
