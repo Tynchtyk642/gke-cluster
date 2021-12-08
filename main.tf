@@ -60,5 +60,5 @@ module "database" {
   sql_user = "admin"
   sql_pass = "password"
 
-  vpc_id = "" # <<== VPC ID
+  vpc_id = "projects/universal-fort-327003/global/networks/vpc" # <<== VPC ID
 }

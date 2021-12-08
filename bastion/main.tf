@@ -25,7 +25,7 @@ resource "google_compute_instance" "bastion" {
     enable_integrity_monitoring = true
   }
 
-  metadata_startup_script = "sudo yum -y install tinyproxy && sudo yum -y install kubectl && sudo systemctl start tinyproxy && sudo systemctl enable tinyproxy"
+  metadata_startup_script = "sudo yum -y install tinyproxy postgres* && sudo yum -y install kubectl && sudo systemctl start tinyproxy && sudo systemctl enable tinyproxy"
 
   network_interface {
     subnetwork = var.subnet_name
