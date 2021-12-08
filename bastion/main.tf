@@ -18,6 +18,7 @@ resource "google_compute_instance" "bastion" {
       image = "centos-cloud/centos-7"
     }
   }
+  deletion_protection = false
 
   shielded_instance_config {
     enable_secure_boot          = true

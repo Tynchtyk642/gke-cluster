@@ -18,5 +18,6 @@ variable "main_zone" {
 }
 
 variable "gke_version" {
+  description = "The minimum version of the master."
   type = string
 }

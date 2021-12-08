@@ -6,7 +6,7 @@ resource "google_sql_database_instance" "master" {
   name             = "sql-master-${random_id.id.hex}"
   region           = "us-east1"
   database_version = "POSTGRES_13"
-  deletion_protection = true
+  deletion_protection = false
 
   settings {
     tier              = var.sql_instance_size

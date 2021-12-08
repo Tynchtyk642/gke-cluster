@@ -10,9 +10,15 @@ resource "google_container_cluster" "preview_deploys_db" {
   network    = var.network
   subnetwork = var.subnet_name
 
+  resource_labels = var.resource_labels
+
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = var.ip_range_pods
     services_ipv4_cidr_block = var.ip_range_services
+  }
+
+  pod_security_policy_config {
+    enabled = true
   }
 
   logging_service    = "logging.googleapis.com/kubernetes"
@@ -28,7 +34,7 @@ resource "google_container_cluster" "preview_deploys_db" {
     password = ""
 
     client_certificate_config {
-      issue_client_certificate = false
+      issue_client_certificate = true
     }
   }
 
