@@ -1,3 +1,15 @@
+resource "google_service_account" "web" {
+  account_id = "cloud-sql-access"
+  display_name = "Service account used to access cloud sql instances"
+}
+
+resource "google_project_iam_binding" "cloudsql_client" {
+  role = "roles/cloudsql.client"
+  members = [
+    "serviceAccount:cloud-sql-access@${var.project_id}.iam.gserviceaccount.com",
+  ]
+}
+
 resource "random_id" "id" {
   byte_length = 4
 }

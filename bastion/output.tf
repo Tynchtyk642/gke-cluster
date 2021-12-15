@@ -12,3 +12,8 @@ output "kubectl_command" {
   description = "kubectl command using the local proxy once the Bastion ssh command is running."
   value       = "HTTPS_PROXY=localhost:8888 kubectl"
 }
+
+output "service_account" {
+  description = "The Google Cloud Platform Service Account to be used by the node VMs"
+  value = google_service_account.bastion.email
+}

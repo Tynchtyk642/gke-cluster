@@ -12,6 +12,10 @@ resource "google_container_cluster" "preview_deploys_app" {
 
   resource_labels = var.resource_labels
 
+  # workload_identity_config {
+  #   identity_namespace = "${var.project_id}.svc.id.goog"
+  # }
+
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = var.ip_range_pods
     services_ipv4_cidr_block = var.ip_range_services
@@ -59,6 +63,10 @@ resource "google_container_cluster" "preview_deploys_app" {
   }
 
   addons_config {
+    http_load_balancing {
+      disabled = false
+    }
+
     network_policy_config {
       disabled = false
     }
@@ -69,6 +77,9 @@ resource "google_container_cluster" "preview_deploys_app" {
 
   network_policy {
     enabled = true
+  }
+  lifecycle {
+    create_before_destroy = false
   }
 
   node_config {
@@ -81,7 +92,7 @@ resource "google_container_node_pool" "preview_deploys_app" {
   name               = var.node_pool_name
   location           = google_container_cluster.preview_deploys_app.location
   cluster            = google_container_cluster.preview_deploys_app.name
-  initial_node_count = 2
+  initial_node_count = 5
 
   autoscaling {
     min_node_count = var.min_node_count
@@ -96,12 +107,12 @@ resource "google_container_node_pool" "preview_deploys_app" {
   node_config {
     preemptible     = false
     machine_type    = var.machine_type
-    service_account = ""
+    service_account = var.service_account
 
-    metadata = {
-      google-compute-enable-virtio-rng = true
-      disable-legacy-endpoint          = true
-    }
+    # metadata = {
+    #   google-compute-enable-virtio-rng = true
+    #   disable-legacy-endpoint          = true
+    # }
 
     oauth_scopes = var.oauth_scopes
 
@@ -117,12 +128,8 @@ resource "google_container_node_pool" "preview_deploys_app" {
   }
 
   lifecycle {
+    create_before_destroy = false
     prevent_destroy = false
-    ignore_changes  = [node_config]
+    # ignore_changes  = [node_config["metadata"]]
   }
-
-
-  depends_on = [
-    google_container_cluster.preview_deploys_app
-  ]
 }

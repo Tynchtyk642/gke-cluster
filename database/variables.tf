@@ -28,3 +28,5 @@ variable "sql_pass" {
 
 
 variable "vpc_id" {}
+
+variable "project_id" {}

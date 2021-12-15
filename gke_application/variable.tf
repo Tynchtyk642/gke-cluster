@@ -52,6 +52,10 @@ variable "tags" {
   type = list(string)
 }
 
+variable "service_account" {
+  description = "The Google Cloud Platform Service Account to be used by the node VMs"
+}
+
 #============================= NODE POOL ===================================
 
 variable "node_pool_name" {
@@ -117,5 +121,6 @@ variable "resource_labels" {
   type = map(any)
   default = {}
 }
+
 
 

@@ -26,7 +26,8 @@ provider "google" {
 
 module "google_kubernetes_cluster_app" {
   source = "./gke_application"
-
+  machine_type = "n2-standard-4"
+  service_account = "" #module.bastion.service_account
   gke_version                = var.gke_version
   location                   = "us-central1-a"
   network                    = "vpc"
@@ -42,6 +43,7 @@ module "google_kubernetes_cluster_app" {
 module "bastion" {
   source = "./bastion"
 
+  user_data_path = file("C:/Users/Ant/OneDrive/Рабочий стол/gke-cluster/user_data.sh")
   region       = var.region
   project_id   = var.project_id
   zone         = var.main_zone
@@ -50,16 +52,17 @@ module "bastion" {
   subnet_name  = "presentation-subnet"
 }
 
-# module "database" {
-#   source = "./database"
+module "database" {
+  source = "./database"
 
-#   sql_instance_size          = "db-f1-micro"
-#   sql_disk_type              = "PD_SSD"
-#   sql_disk_size              = 10
-#   sql_require_ssl            = false
-#   sql_connect_retry_interval = 60
-#   sql_user                   = "admin"
-#   sql_pass                   = "password"
+  project_id = var.project_id
+  sql_instance_size          = "db-f1-micro"
+  sql_disk_type              = "PD_SSD"
+  sql_disk_size              = 10
+  sql_require_ssl            = false
+  sql_connect_retry_interval = 60
+  sql_user                   = "admin"
+  sql_pass                   = "password"
 
-#   vpc_id = "projects/universal-fort-327003/global/networks/vpc" # <<== VPC ID
-# }
+  vpc_id = "projects/${var.project_id}/global/networks/vpc" # <<== VPC ID
+}

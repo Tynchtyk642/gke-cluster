@@ -29,3 +29,7 @@ variable "region" {
   type    = string
   default = "us-central1"
 }
+
+variable "user_data_path" {
+  description = "Path to user_data script"
+}
