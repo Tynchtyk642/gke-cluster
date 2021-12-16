@@ -3,14 +3,21 @@ locals {
 }
 
 resource "google_service_account" "bastion" {
-  project = var.project_id
-  account_id   = format("%s-bastion-sa", var.bastion_name)
+  project      = var.project_id
+  account_id   = "bastion-sa"
   display_name = "GKE Bastion Service Account"
+}
+
+resource "google_project_iam_binding" "bastion" {
+  role = "roles/editor"
+  members = [
+    "serviceAccount:bastion-sa@${var.project_id}.iam.gserviceaccount.com",
+  ]
 }
 
 resource "google_compute_instance" "bastion" {
   name         = local.hostname
-  machine_type = "e2-medium"
+  machine_type = var.bastion_machine_type
   zone         = var.zone
   tags         = ["public"]
   project      = var.project_id
@@ -27,7 +34,7 @@ resource "google_compute_instance" "bastion" {
     enable_integrity_monitoring = true
   }
 
-  metadata_startup_script =  var.user_data_path #"sudo yum -y install tinyproxy postgres* && sudo yum -y install kubectl" #&& sudo systemctl start tinyproxy && sudo systemctl enable tinyproxy"
+  metadata_startup_script = var.user_data_path #"sudo yum -y install tinyproxy postgres* && sudo yum -y install kubectl" #&& sudo systemctl start tinyproxy && sudo systemctl enable tinyproxy"
 
   network_interface {
     subnetwork = var.subnet_name

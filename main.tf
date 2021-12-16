@@ -26,8 +26,13 @@ provider "google" {
 
 module "google_kubernetes_cluster_app" {
   source = "./gke_application"
-  machine_type = "n2-standard-4"
-  service_account = "" #module.bastion.service_account
+
+  project_id = var.project_id
+  cluster_name               = var.cluster_name
+  node_pool_name             = var.node_pool_name
+  node_count                 = var.node_count
+  machine_type               = var.machine_type
+  service_account            = "" #module.bastion.service_account
   gke_version                = var.gke_version
   location                   = "us-central1-a"
   network                    = "vpc"
@@ -38,31 +43,36 @@ module "google_kubernetes_cluster_app" {
   authorized_ipv4_cidr_block = "${module.bastion.ip}/32"
   tags                       = ["application"]
   resource_labels            = {}
+
+  min_node_count = var.min_node_count
+  max_node_count = var.max_node_count
 }
 
 module "bastion" {
   source = "./bastion"
 
-  user_data_path = file("C:/Users/Ant/OneDrive/Рабочий стол/gke-cluster/user_data.sh")
-  region       = var.region
-  project_id   = var.project_id
-  zone         = var.main_zone
-  bastion_name = "app-cluster"
-  vpc_name     = "vpc"
-  subnet_name  = "presentation-subnet"
+  bastion_machine_type = var.bastion_machine_type
+  user_data_path       = file("./user_data.sh") # <= Specify path of user_data.sh
+  region               = var.region
+  project_id           = var.project_id
+  zone                 = var.main_zone
+  bastion_name         = "app-cluster"
+  vpc_name             = "vpc"
+  subnet_name          = "presentation-subnet"
 }
 
 module "database" {
   source = "./database"
 
-  project_id = var.project_id
-  sql_instance_size          = "db-f1-micro"
-  sql_disk_type              = "PD_SSD"
-  sql_disk_size              = 10
+  sql_region                 = var.sql_region
+  project_id                 = var.project_id
+  sql_instance_type          = var.sql_instance_type
+  sql_disk_type              = var.sql_disk_type
+  sql_disk_size              = var.sql_disk_size
   sql_require_ssl            = false
   sql_connect_retry_interval = 60
-  sql_user                   = "admin"
-  sql_pass                   = "password"
+  sql_user                   = var.sql_user
+  sql_pass                   = var.sql_pass
 
   vpc_id = "projects/${var.project_id}/global/networks/vpc" # <<== VPC ID
 }

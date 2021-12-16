@@ -15,5 +15,5 @@ output "kubectl_command" {
 
 output "service_account" {
   description = "The Google Cloud Platform Service Account to be used by the node VMs"
-  value = google_service_account.bastion.email
+  value       = google_service_account.bastion.email
 }

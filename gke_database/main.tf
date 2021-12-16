@@ -1,4 +1,4 @@
-resource "google_container_cluster" "preview_deploys_db" {
+resource "google_container_cluster" "sandbox_deploys_db" {
   project  = var.project_id
   name     = var.cluster_name
   location = var.location
@@ -77,10 +77,10 @@ resource "google_container_cluster" "preview_deploys_db" {
 }
 
 
-resource "google_container_node_pool" "preview_deploys_db" {
+resource "google_container_node_pool" "sandbox_deploys_db" {
   name               = var.node_pool_name
-  location           = google_container_cluster.preview_deploys_db.location
-  cluster            = google_container_cluster.preview_deploys_db.name
+  location           = google_container_cluster.sandbox_deploys_db.location
+  cluster            = google_container_cluster.sandbox_deploys_db.name
   initial_node_count = 2
 
 
@@ -111,7 +111,7 @@ resource "google_container_node_pool" "preview_deploys_db" {
     }
 
     labels = {
-      cluster = google_container_cluster.preview_deploys_db.name
+      cluster = google_container_cluster.sandbox_deploys_db.name
     }
 
     tags = var.tags
@@ -124,6 +124,6 @@ resource "google_container_node_pool" "preview_deploys_db" {
 
 
   depends_on = [
-    google_container_cluster.preview_deploys_db
+    google_container_cluster.sandbox_deploys_db
   ]
 }

@@ -1,4 +1,4 @@
-resource "google_container_cluster" "preview_deploys_app" {
+resource "google_container_cluster" "sandbox_deploys_app" {
   project  = var.project_id
   name     = var.cluster_name
   location = var.location
@@ -88,11 +88,11 @@ resource "google_container_cluster" "preview_deploys_app" {
 }
 
 
-resource "google_container_node_pool" "preview_deploys_app" {
+resource "google_container_node_pool" "sandbox_deploys_app" {
   name               = var.node_pool_name
-  location           = google_container_cluster.preview_deploys_app.location
-  cluster            = google_container_cluster.preview_deploys_app.name
-  initial_node_count = 5
+  location           = google_container_cluster.sandbox_deploys_app.location
+  cluster            = google_container_cluster.sandbox_deploys_app.name
+  initial_node_count = var.node_count
 
   autoscaling {
     min_node_count = var.min_node_count
@@ -121,7 +121,7 @@ resource "google_container_node_pool" "preview_deploys_app" {
     }
 
     labels = {
-      cluster = google_container_cluster.preview_deploys_app.name
+      cluster = google_container_cluster.sandbox_deploys_app.name
     }
 
     tags = var.tags
@@ -129,7 +129,7 @@ resource "google_container_node_pool" "preview_deploys_app" {
 
   lifecycle {
     create_before_destroy = false
-    prevent_destroy = false
+    prevent_destroy       = false
     # ignore_changes  = [node_config["metadata"]]
   }
 }

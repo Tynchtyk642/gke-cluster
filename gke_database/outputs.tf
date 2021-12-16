@@ -1,14 +1,14 @@
 output "name" {
-  value       = google_container_cluster.preview_deploys_db.name
+  value       = google_container_cluster.sandbox_deploys_db.name
   description = "The Kubernetes cluster name."
 }
 
 output "project_id" {
   description = "Project GKE cluster created in."
-  value = google_container_cluster.preview_deploys_db.project
+  value       = google_container_cluster.sandbox_deploys_db.project
 }
 
 output "zone" {
   description = "The zone GKE cluster created in."
-  value = google_container_cluster.preview_deploys_db.location
+  value       = google_container_cluster.sandbox_deploys_db.location
 }

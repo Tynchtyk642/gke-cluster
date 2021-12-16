@@ -1,5 +1,5 @@
-variable "sql_instance_size" {
-  description = "Size of Cloud SQL instances"
+variable "sql_instance_type" {
+  description = "Type of Cloud SQL instances"
 }
 
 variable "sql_disk_type" {
@@ -24,6 +24,10 @@ variable "sql_user" {
 
 variable "sql_pass" {
   description = "Password of the host to access the database"
+}
+
+variable "sql_region" {
+  description = "Region where sql will crated in."
 }
 
 
