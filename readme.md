@@ -93,7 +93,7 @@ module "database" {
 
 ## **Cheking connection to PostgreSQL:**
 1. Download the Cloud SQL Auth proxy with commands:
-   +  `wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy`
+   +  `wget wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy`
    +  `chmod +x cloud_sql_proxy`
 2. Start the Cloud SQL Auth proxy:
    + `./cloud_sql_proxy -instances=INSTANCE_CONNECTION_NAME=tcp:5432`
