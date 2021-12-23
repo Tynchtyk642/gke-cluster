@@ -1,6 +1,5 @@
 version: 2
 
-
 jobs:
   plan_to_deploy:
     working_directory: /terraform

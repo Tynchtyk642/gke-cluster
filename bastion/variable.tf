@@ -3,6 +3,11 @@ variable "bastion_name" {
   description = "The name to use for the bastion instance."
 }
 
+variable "bastion_machine_type" {
+  type        = string
+  description = "Machine type of bastion instance."
+}
+
 variable "vpc_name" {
   type        = string
   description = "The name of the network that should be used."
@@ -19,11 +24,17 @@ variable "project_id" {
 }
 
 variable "zone" {
-  type    = string
-  default = "us-central1-b"
+  description = "The zone that the machine should be created in."
+  type        = string
+  default     = "us-central1-b"
 }
 
 variable "region" {
-  type    = string
-  default = "us-central1"
+  description = "The region that the machine should be created in."
+  type        = string
+  default     = "us-central1"
+}
+
+variable "user_data_path" {
+  description = "Path to user_data script"
 }

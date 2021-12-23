@@ -1,4 +1,4 @@
-resource "google_container_cluster" "preview_deploys_db" {
+resource "google_container_cluster" "sandbox_deploys_db" {
   project  = var.project_id
   name     = var.cluster_name
   location = var.location
@@ -10,9 +10,15 @@ resource "google_container_cluster" "preview_deploys_db" {
   network    = var.network
   subnetwork = var.subnet_name
 
+  resource_labels = var.resource_labels
+
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = var.ip_range_pods
     services_ipv4_cidr_block = var.ip_range_services
+  }
+
+  pod_security_policy_config {
+    enabled = true
   }
 
   logging_service    = "logging.googleapis.com/kubernetes"
@@ -28,7 +34,7 @@ resource "google_container_cluster" "preview_deploys_db" {
     password = ""
 
     client_certificate_config {
-      issue_client_certificate = false
+      issue_client_certificate = true
     }
   }
 
@@ -49,7 +55,7 @@ resource "google_container_cluster" "preview_deploys_db" {
   }
 
   release_channel {
-    channel = "STABLE"
+    channel = "UNSPECIFIED"
   }
 
   addons_config {
@@ -71,10 +77,10 @@ resource "google_container_cluster" "preview_deploys_db" {
 }
 
 
-resource "google_container_node_pool" "preview_deploys_db" {
+resource "google_container_node_pool" "sandbox_deploys_db" {
   name               = var.node_pool_name
-  location           = google_container_cluster.preview_deploys_db.location
-  cluster            = google_container_cluster.preview_deploys_db.name
+  location           = google_container_cluster.sandbox_deploys_db.location
+  cluster            = google_container_cluster.sandbox_deploys_db.name
   initial_node_count = 2
 
 
@@ -105,7 +111,7 @@ resource "google_container_node_pool" "preview_deploys_db" {
     }
 
     labels = {
-      cluster = google_container_cluster.preview_deploys_db.name
+      cluster = google_container_cluster.sandbox_deploys_db.name
     }
 
     tags = var.tags
@@ -118,6 +124,6 @@ resource "google_container_node_pool" "preview_deploys_db" {
 
 
   depends_on = [
-    google_container_cluster.preview_deploys_db
+    google_container_cluster.sandbox_deploys_db
   ]
 }

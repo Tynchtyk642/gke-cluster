@@ -1,5 +1,8 @@
 .terraform
 terraform.tfstate.backup
 .terraform.lock.hcl
-playground-s-11-6e005c59-78077028bb67.json
+universal-fort-327003-26c35b9c41ad.json
+terraform.tfstate.1638995530.backup
 terraform.tfstate
+id_rsa*
+cred.json

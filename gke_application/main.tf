@@ -1,4 +1,4 @@
-resource "google_container_cluster" "preview_deploys_app" {
+resource "google_container_cluster" "sandbox_deploys_app" {
   project  = var.project_id
   name     = var.cluster_name
   location = var.location
@@ -10,9 +10,19 @@ resource "google_container_cluster" "preview_deploys_app" {
   network    = var.network
   subnetwork = var.subnet_name
 
+  resource_labels = var.resource_labels
+
+  # workload_identity_config {
+  #   identity_namespace = "${var.project_id}.svc.id.goog"
+  # }
+
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = var.ip_range_pods
     services_ipv4_cidr_block = var.ip_range_services
+  }
+
+  pod_security_policy_config {
+    enabled = true
   }
 
   logging_service    = "logging.googleapis.com/kubernetes"
@@ -28,7 +38,7 @@ resource "google_container_cluster" "preview_deploys_app" {
     password = ""
 
     client_certificate_config {
-      issue_client_certificate = false
+      issue_client_certificate = true
     }
   }
 
@@ -49,10 +59,14 @@ resource "google_container_cluster" "preview_deploys_app" {
   }
 
   release_channel {
-    channel = "STABLE"
+    channel = "UNSPECIFIED"
   }
 
   addons_config {
+    http_load_balancing {
+      disabled = false
+    }
+
     network_policy_config {
       disabled = false
     }
@@ -64,6 +78,9 @@ resource "google_container_cluster" "preview_deploys_app" {
   network_policy {
     enabled = true
   }
+  lifecycle {
+    create_before_destroy = false
+  }
 
   node_config {
     tags = var.tags
@@ -71,11 +88,11 @@ resource "google_container_cluster" "preview_deploys_app" {
 }
 
 
-resource "google_container_node_pool" "preview_deploys_app" {
+resource "google_container_node_pool" "sandbox_deploys_app" {
   name               = var.node_pool_name
-  location           = google_container_cluster.preview_deploys_app.location
-  cluster            = google_container_cluster.preview_deploys_app.name
-  initial_node_count = 2
+  location           = google_container_cluster.sandbox_deploys_app.location
+  cluster            = google_container_cluster.sandbox_deploys_app.name
+  initial_node_count = var.node_count
 
   autoscaling {
     min_node_count = var.min_node_count
@@ -90,12 +107,12 @@ resource "google_container_node_pool" "preview_deploys_app" {
   node_config {
     preemptible     = false
     machine_type    = var.machine_type
-    service_account = ""
+    service_account = var.service_account
 
-    metadata = {
-      google-compute-enable-virtio-rng = true
-      disable-legacy-endpoint          = true
-    }
+    # metadata = {
+    #   google-compute-enable-virtio-rng = true
+    #   disable-legacy-endpoint          = true
+    # }
 
     oauth_scopes = var.oauth_scopes
 
@@ -104,19 +121,15 @@ resource "google_container_node_pool" "preview_deploys_app" {
     }
 
     labels = {
-      cluster = google_container_cluster.preview_deploys_app.name
+      cluster = google_container_cluster.sandbox_deploys_app.name
     }
 
     tags = var.tags
   }
 
   lifecycle {
-    prevent_destroy = false
-    ignore_changes  = [node_config]
+    create_before_destroy = false
+    prevent_destroy       = false
+    # ignore_changes  = [node_config["metadata"]]
   }
-
-
-  depends_on = [
-    google_container_cluster.preview_deploys_app
-  ]
 }

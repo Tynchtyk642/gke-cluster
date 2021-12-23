@@ -4,11 +4,8 @@ output "Bastion_open_tunnel_command" {
 }
 
 output "app_configure_kubectl_command_for_cluster" {
-  value = "gcloud container clusters get-credentials ${module.google_kubernetes_cluster_app.name} --zone ${module.google_kubernetes_cluster_app.zone} --project ${module.google_kubernetes_cluster_app.project_id}"
-}
-
-output "db_configure_kubectl_command_for_cluster" {
-  value = "gcloud container clusters get-credentials ${module.google_kubernetes_cluster_db.name} --zone ${module.google_kubernetes_cluster_db.zone} --project ${module.google_kubernetes_cluster_db.project_id}"
+  description = "Command to connect to cluster."
+  value       = "gcloud container clusters get-credentials ${module.google_kubernetes_cluster_app.name} --zone ${module.google_kubernetes_cluster_app.zone} --project ${module.google_kubernetes_cluster_app.project_id}"
 }
 
 
