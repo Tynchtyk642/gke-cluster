@@ -1,4 +1,4 @@
-.terraform
+.terraform*
 terraform.tfstate.backup
 .terraform.lock.hcl
 universal-fort-327003-26c35b9c41ad.json

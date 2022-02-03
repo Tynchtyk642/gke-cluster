@@ -2,9 +2,8 @@
 
 ## This codes create:
 
-1. ### Two private gke-clusters with `node_pool`:
+1. ### Private gke-clusters with `node_pool`:
     - _Application cluster_
-    - _Database cluster_
 2. ### Bastion Host with Identity aware proxy (IAP) for a secure access.
 3. ### Cloud SQL (PostgreSQL) database.
 
